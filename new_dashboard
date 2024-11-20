@@ -1,0 +1,191 @@
+import 'package:flutter/material.dart';
+import 'about_screen.dart';
+import 'setting_screen.dart';
+import 'form_screen.dart';
+
+class DashboardScreen extends StatelessWidget {
+  final String username;
+
+  const DashboardScreen({super.key, required this.username});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: const Color.fromRGBO(255, 146, 9, 1),
+      appBar: AppBar(
+        backgroundColor: const Color.fromRGBO(43, 52, 153, 1),
+        title: const Text('Astronomi Ku'),
+      ),
+      drawer: _buildDrawer(context),
+      body: SafeArea(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _buildSearchSection(),
+            const SizedBox(height: 10),
+            _buildGridView(),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Drawer _buildDrawer(BuildContext context) {
+    return Drawer(
+      child: ListView(
+        padding: EdgeInsets.zero,
+        children: [
+          _buildDrawerHeader(),
+          _buildDrawerItem(
+            icon: Icons.settings,
+            text: 'Settings',
+            onTap: () {
+              Navigator.pop(context); // Menutup drawer
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => SettingScreen()),
+              );
+            },
+          ),
+          _buildDrawerItem(
+            icon: Icons.info,
+            text: 'About App',
+            onTap: () {
+              Navigator.pop(context); // Menutup drawer
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => AboutScreen()),
+              );
+            },
+          ),
+          _buildDrawerItem(
+            icon: Icons.logout,
+            text: 'Logout',
+            onTap: () {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => FormScreen()),
+              );
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  DrawerHeader _buildDrawerHeader() {
+    return DrawerHeader(
+      decoration: const BoxDecoration(
+        color: Color.fromRGBO(43, 52, 153, 1),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const CircleAvatar(
+            radius: 30,
+            backgroundColor: Colors.white,
+            child: Icon(
+              Icons.person,
+              size: 40,
+              color: Colors.blue,
+            ),
+          ),
+          const SizedBox(height: 10),
+          Text(
+            "Hello, $username!",
+            style: const TextStyle(
+              fontSize: 18,
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  ListTile _buildDrawerItem({
+    required IconData icon,
+    required String text,
+    required VoidCallback onTap,
+  }) {
+    return ListTile(
+      leading: Icon(icon),
+      title: Text(text),
+      onTap: onTap,
+    );
+  }
+
+  Widget _buildSearchSection() {
+    return Container(
+      width: double.infinity,
+      decoration: const BoxDecoration(
+        color: Color.fromRGBO(255, 108, 34, 1),
+      ),
+      padding: const EdgeInsets.all(25.0),
+      child: const Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'What You think About?',
+            style: TextStyle(color: Colors.black87, fontSize: 15),
+          ),
+          SizedBox(height: 10),
+          TextField(
+            decoration: InputDecoration(
+              prefixIcon: Icon(Icons.search),
+              hintText: 'Search here...',
+              border: OutlineInputBorder(),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildGridView() {
+    return Expanded(
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: GridView.builder(
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2, // Jumlah kolom
+            crossAxisSpacing: 10.0, // Spasi horizontal antar item
+            mainAxisSpacing: 10.0, // Spasi vertikal antar item
+          ),
+          itemCount: 8, // Jumlah gambar dalam grid
+          itemBuilder: (context, index) {
+            return Card(
+              color: Colors.white,
+              elevation: 5,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(
+                    Icons.image,
+                    size: 50,
+                    color: Colors.orange,
+                  ),
+                  const SizedBox(height: 10),
+                  Text(
+                    'Image ${index + 1}',
+                    style: const TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black87,
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
+        ),
+      ),
+    );
+  }
+}
